@@ -1,0 +1,19 @@
+@import "tailwindcss" theme(static);
+@import "@nuxt/ui";
+
+@theme static {
+  --container-8xl: 90rem;
+}
+
+/** inline tailwind classes for the dynamic class generation in IGrid.vue **/
+@source inline('{sm:,md:,lg:,xl:,}grid-cols-{1,2,3,4,5,6,7,8}');
+@source inline('{sm:,md:,lg:,xl:,}grid');
+
+
+:root {
+  --ui-container: var(--container-8xl);
+}
+
+html {
+  scroll-behavior: smooth;
+}
