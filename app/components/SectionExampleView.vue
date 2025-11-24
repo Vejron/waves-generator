@@ -1,31 +1,31 @@
 <script lang="ts" setup>
 const props = defineProps<{
-  path: string;
+  topMask: string;
+  bottomMask: string;
   height: number;
   width: number;
 }>();
 
 const el = useTemplateRef("el");
 
-const pathComputed = computed(() => el.value && props.path);
+const top = computed(() => el.value && props.topMask);
+const bottom = computed(() => el.value && props.bottomMask);
 
-watch(
-  pathComputed,
-  (newPath) => {
-    // replace the --top-mask-image with a new svg path
-    if (el.value && newPath) {
-      console.log("Path changed to:", newPath);
-      const topMaskImage = `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${props.width} ${props.height}"><path d="${newPath}"/></svg>')`;
-      el.value.style.setProperty("--top-mask-image", topMaskImage);
-      console.log("Updated top mask image to:", topMaskImage);
-      const invertedPath = enclosePathAbove(newPath, props.width, props.height);
-      console.log("Generated bottom mask image:", invertedPath);
-      const bottomMaskImage = `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${props.width} ${props.height}"><path d="${invertedPath}"/></svg>')`;
-      el.value.style.setProperty("--bottom-mask-image", bottomMaskImage);
-    }
-  },
-  { immediate: true }
-);
+watch(top, (mask) => {
+  // replace the --top-mask-image with a new svg path
+  if (el.value && mask) {
+    el.value.style.setProperty("--top-mask-image", mask);
+    console.log("Updated top mask image to:", mask);
+  }
+}, { immediate: true });
+
+watch(bottom, (mask) => {
+  // replace the --bottom-mask-image with a new svg path
+  if (el.value && mask) {
+    el.value.style.setProperty("--bottom-mask-image", mask);
+    console.log("Updated bottom mask image to:", mask);
+  }
+}, { immediate: true });
 
 watch(
   () => props.height,
@@ -60,18 +60,17 @@ watch(
   <div class="mask-container" ref="el">
     <div class="">
       <span class="hidden">The Content Above the Effect</span>
-      <svg class="hidden" width="100%" height="40px" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 100"><path d="M0,100S32.06,0,326.72,0c255.72,0,358.35,119.2,673.28,77.47v22.53H0Z"/></svg>
     </div>
 
     <div
       
-      class="mask-box pattern-background bg-elevated flex items-center"
+      class="mask-box bg-radial-[at_25%_25%] from-primary/18 to-bg to-80% flex items-center"
     >
       <div class="h-100 border border-dashed rounded m-5 w-full"></div>
      
     </div>
 
-    <div>
+    <div class="bg-linear-t from-transparent to-primary/40">
       <span class="hidden">The Content Below the Effect</span>
     </div>
   </div>
@@ -79,8 +78,9 @@ watch(
 
 <style scoped>
 .pattern-background {
-  background-color: var(--ui-bg-elevated);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%237f30ff' fill-opacity='0.5' fill-rule='nonzero'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-color: var(--ui-bg);
+  background-size: 200px;
+  background-image: url("data:image/svg+xml,%3Csvg width='84' height='48' viewBox='0 0 84 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h12v6H0V0zm28 8h12v6H28V8zm14-8h12v6H42V0zm14 0h12v6H56V0zm0 8h12v6H56V8zM42 8h12v6H42V8zm0 16h12v6H42v-6zm14-8h12v6H56v-6zm14 0h12v6H70v-6zm0-16h12v6H70V0zM28 32h12v6H28v-6zM14 16h12v6H14v-6zM0 24h12v6H0v-6zm0 8h12v6H0v-6zm14 0h12v6H14v-6zm14 8h12v6H28v-6zm-14 0h12v6H14v-6zm28 0h12v6H42v-6zm14-8h12v6H56v-6zm0-8h12v6H56v-6zm14 8h12v6H70v-6zm0 8h12v6H70v-6zM14 24h12v6H14v-6zm14-8h12v6H28v-6zM14 8h12v6H14V8zM0 8h12v6H0V8z' fill='black' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
 .mask-container {
@@ -133,7 +133,9 @@ watch(
   padding-block: var(--top-mask-height) var(--bottom-mask-height);
 
   /* Apply the three masks! */
-  mask-image: var(--top-mask-image),
+  mask-image:
+    
+    var(--top-mask-image),
     linear-gradient(
       transparent var(--top-mask-height),
       black 0%,
@@ -141,8 +143,9 @@ watch(
       transparent calc(100% - var(--bottom-mask-height))
     ),
     var(--bottom-mask-image);
+
   mask-repeat: no-repeat;
-  mask-position: top, top, bottom;
+  mask-position: top, top, bottom, top;
   mask-size: 100%, 100%, 100%; /* You may need to increase the width to 101% on the svg masks to compensate for strange sizing behavior in Firefox */
 }
 </style>

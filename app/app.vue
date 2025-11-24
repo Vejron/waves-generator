@@ -34,9 +34,9 @@ const links = [
     to: "/",
   },
   {
-    label: "Content",
+    label: "Examples",
     icon: "i-lucide-box",
-    to: "/",
+    to: "/examples",
   },
   {
     label: "Presentation",

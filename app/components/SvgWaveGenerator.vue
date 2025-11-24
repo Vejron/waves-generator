@@ -274,17 +274,13 @@ function updatePointById(id: number, data: Partial<NormalizedPoint>): void {
   points.value = updated;
 }
 
-async function copyPath(): Promise<void> {
-  if (
-    !pathD.value ||
-    typeof navigator === "undefined" ||
-    !navigator.clipboard
-  ) {
+async function copyPath(path): Promise<void> {
+  if (!path || typeof navigator === "undefined" || !navigator.clipboard) {
     return;
   }
 
   try {
-    await navigator.clipboard.writeText(pathD.value);
+    await navigator.clipboard.writeText(path);
     copyFeedback.value = "Copied!";
   } catch {
     copyFeedback.value = "Copy failed";
@@ -306,10 +302,17 @@ function clamp01(value: number): number {
 onBeforeUnmount(() => {
   stopDrag();
 });
+
+const { topMask, bottomMask } = usePathToSvg(
+  pathD,
+  viewBoxWidth,
+  viewBoxHeight
+);
 </script>
 
 <template>
   <div class="space-y-6">
+    <CogEffect></CogEffect>
     <UContainer class="flex flex-col gap-6 lg:flex-row">
       <UCard class="min-w-sm">
         <template #header>Wave Controls</template>
@@ -400,26 +403,79 @@ onBeforeUnmount(() => {
               color="neutral"
               variant="subtle"
               :disabled="!pathD"
-              @click="copyPath"
+              @click="copyPath(pathD)"
             >
               Copy path
             </UButton>
+            <UButton
+              size="sm"
+              color="neutral"
+              variant="subtle"
+              :disabled="!topMask"
+              @click="copyPath(topMask)"
+            >
+              Copy top mask CSS url
+            </UButton>
+            <UButton
+              size="sm"
+              color="neutral"
+              variant="subtle"
+              :disabled="!bottomMask"
+              @click="copyPath(bottomMask)"
+            >
+              Copy bottom mask CSS url
+            </UButton>
             <span class="copy-feedback">{{ copyFeedback }}</span>
           </div>
-          <p class="viewbox-hint">
-            viewBox="0 0 {{ viewBoxWidth }} {{ viewBoxHeight }}"
-          </p>
         </div>
       </UCard>
     </UContainer>
-    
-    <template v-if="pathD">
-      <SectionExampleView :height="viewBoxHeight" :width="viewBoxWidth" :path="pathD" />
-      <SectionExampleView :height="viewBoxHeight" :width="viewBoxWidth" :path="pathD" />
-      <SectionExampleView :height="viewBoxHeight" :width="viewBoxWidth" :path="pathD" />
+
+    <template v-if="topMask && bottomMask">
+      <MaskCSSContext
+        :height="viewBoxHeight"
+        :width="viewBoxWidth"
+        :top-mask="topMask"
+        :bottom-mask="bottomMask"
+      >
+        <ASection
+          orientation="horizontal"
+          :background-pattern="{
+            src: 'assets/patterns/circuit-board.svg',
+            size: '200px',
+          }"
+          :image="{
+            src: 'assets/heroes/example.svg',
+            alt: 'Wave image',
+            width: 600,
+            height: 400
+          }"
+          class="drop-shadow-lg"
+          title="Waves surf"
+          description="Experience the thrill of riding the perfect wave with our expertly crafted surfboards"
+        >
+          
+        </ASection>
+      </MaskCSSContext>
+      <SectionExampleView
+        :height="viewBoxHeight"
+        :width="viewBoxWidth"
+        :top-mask
+        :bottom-mask
+      />
+      <SectionExampleView
+        :height="viewBoxHeight"
+        :width="viewBoxWidth"
+        :top-mask
+        :bottom-mask
+      />
+      <SectionExampleView
+        :height="viewBoxHeight"
+        :width="viewBoxWidth"
+        :top-mask
+        :bottom-mask
+      />
     </template>
-      
- 
   </div>
 </template>
 
@@ -486,11 +542,4 @@ onBeforeUnmount(() => {
   font-size: 0.85rem;
   color: rgb(16, 185, 129);
 }
-
-.viewbox-hint {
-  font-size: 0.85rem;
-  color: rgba(15, 23, 42, 0.7);
-  margin: 0;
-}
-
 </style>
