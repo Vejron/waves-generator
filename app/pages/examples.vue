@@ -5,6 +5,7 @@
       description="Create custom svg waveforms with adjustable parameters for your web designs. Use the controls to adjust the SVG wave parameters. Drag the control points on the preview to shape the wave. Click 'Copy path' to copy the SVG path definition to your clipboard for use in your web designs."
     >
     </UPageHero>
+
     <ASection
       orientation="horizontal"
       icon="ph:waves"
@@ -25,7 +26,7 @@
       :background-pattern="{
         src: 'assets/patterns/circuit-board.svg',
         size: '200px',
-        class: 'bg-elevated'
+        class: 'bg-elevated',
       }"
       :image="{
         src: 'assets/heroes/example.svg',
@@ -36,6 +37,20 @@
       title="Waves surf"
       description="Experience the thrill of riding the perfect wave with our expertly crafted surfboards"
     >
+      <template #top>
+        <svg class="absolute top-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" >
+          <path
+            class="path"
+            fill="none"
+            stroke="red"
+            stroke-width="1rem"
+            stroke-linecap="square"
+            vector-effect="non-scaling-stroke"
+            pathLength="1"
+            d="M0,33.38 L0,33.38 S69.49,63 114.39,59.48 C159.29,55.96 223.8,10.38 269.41,12.27 C315.03,14.16 350.18,70.92 388.08,70.81 C425.98,70.7 439.63,12.58 496.81,11.59 C554,10.6 675.24,64.23 731.19,64.88 C787.14,65.53 787.69,15.25 832.49,15.51 C877.29,15.77 972.08,57.93 1000,66.41"
+          />
+        </svg>
+      </template>
     </ASection>
     <ASection
       class="margin-container"
@@ -68,6 +83,21 @@
 </template>
 
 <style scoped>
+.path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: dash 5s linear alternate infinite;
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 .margin-container {
   margin-bottom: calc(var(--bottom-mask-height) * -1.01);
   margin-top: calc(var(--top-mask-height) * -1);
