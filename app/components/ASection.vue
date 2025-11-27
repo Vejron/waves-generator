@@ -1,6 +1,16 @@
 <script lang="ts">
 import type { ButtonProps, PageFeatureProps } from "@nuxt/ui";
 
+/**
+ * This component represents a section of a page with various customizable properties.
+ * It can include a background pattern, headline, title, description, links, features,
+ * and an optional image. It supports different orientations and can reverse the order of its content.
+ * 
+ * A special "mask" mode is available, allowing for decorative masks to be applied to the top and bottom of the section.
+ * The mask images are defined using CSS custom properties, which should be set in the parent component or globally.
+ */
+
+
 export interface PageSectionProps {
   backgroundPattern?: {
     /**
@@ -63,6 +73,9 @@ export interface PageSectionProps {
     width?: number;
     height?: number;
   };
+
+  maskTop?: boolean;
+  maskBottom?: boolean;
   /**
    * Optional classes to apply to the mask box container.
    */
@@ -92,6 +105,8 @@ withDefaults(defineProps<PageSectionProps>(), {
   backgroundPattern: undefined,
   image: undefined,
   maskClasses: undefined,
+  maskTop: false,
+  maskBottom: false,
 });
 const slots = defineSlots<PageSectionSlots>();
 </script>
@@ -100,7 +115,13 @@ const slots = defineSlots<PageSectionSlots>();
   <component
     :is="as"
     :data-orientation="orientation"
-    class="relative mask-container"
+    :class="[
+      maskTop || maskBottom ? 'mask-container' : '',
+      !maskTop ? 'mask-top-disabled' : '',
+      !maskBottom ? 'mask-bottom-disabled' : '',
+      reverse ? 'flex flex-col-reverse' : '',
+    ]"
+    class="relative"
   >
     <div class="bg-transparent"></div>
     <div class="mask-box" :class="maskClasses">
@@ -118,9 +139,10 @@ const slots = defineSlots<PageSectionSlots>();
         class="-z-1 absolute inset-0 w-full h-full opacity-40"
       />
       <div
-        :class="
-          orientation === 'vertical' ? '' : 'lg:grid-cols-2 lg:items-center'
-        "
+        :class="[
+          orientation === 'vertical' ? '' : 'lg:grid-cols-2 lg:items-center',
+          reverse ? 'lg:order-last' : ''
+        ]"
         class="max-w-(--ui-container) mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:grid py-16 sm:py-24 lg:py-32 gap-8 sm:gap-16"
       >
         <div
@@ -272,21 +294,18 @@ const slots = defineSlots<PageSectionSlots>();
 </template>
 
 <style scoped>
+
 .mask-container {
+   /* margin-bottom: calc(var(--top-mask-height) * -1.01); */
   /* Calculate the height of the top mask */
   --top-mask-height: calc(
-    (var(--top-mask-image-height) / var(--top-mask-image-width) * 100) * 1cqw -
-      2px
+    (var(--top-mask-image-height) / var(--top-mask-image-width) * 100) * 1cqw - 2px
   );
 
   /* Calculate the height of the bottom mask */
   --bottom-mask-height: calc(
-    (var(--bottom-mask-image-height) / var(--bottom-mask-image-width) * 100) *
-      1cqw - 2px
+    (var(--bottom-mask-image-height) / var(--bottom-mask-image-width) * 100) * 1cqw - 2px
   );
-}
-
-.mask-container {
   /* Define a container to use cqw instead of vw units */
   container-type: inline-size;
 
@@ -302,7 +321,17 @@ const slots = defineSlots<PageSectionSlots>();
   }
 }
 
-.mask-box {
+.mask-container.mask-top-disabled {
+  --top-mask-height: 0px;
+  --top-mask-image: none;
+}
+
+.mask-container.mask-bottom-disabled {
+  --bottom-mask-height: 0px;
+  --bottom-mask-image: none;
+}
+
+.mask-container .mask-box {
   /* Apply negative margin to the top and bottom */
   margin-block: calc(-1 * var(--top-mask-height))
     calc(-1 * var(--bottom-mask-height));
@@ -315,7 +344,7 @@ const slots = defineSlots<PageSectionSlots>();
     linear-gradient(
       transparent var(--top-mask-height),
       black 0%,
-      black calc(100% - var(--top-mask-height)),
+      black calc(100% - var(--bottom-mask-height)),
       transparent calc(100% - var(--bottom-mask-height))
     ),
     var(--bottom-mask-image);
@@ -323,4 +352,6 @@ const slots = defineSlots<PageSectionSlots>();
   mask-position: top, top, bottom;
   mask-size: 100%, 100%, 100%; /* You may need to increase the width to 101% on the svg masks to compensate for strange sizing behavior in Firefox */
 }
+
+
 </style>
