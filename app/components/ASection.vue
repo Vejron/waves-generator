@@ -296,7 +296,9 @@ const slots = defineSlots<PageSectionSlots>();
 <style scoped>
 
 .mask-container {
-   /* margin-bottom: calc(var(--top-mask-height) * -1.01); */
+  /* Apply negative margin to the top and bottom if there is a mask add 1 px to avoid any gap artifacts */
+   margin-top: calc(var(--top-mask-height) * -1 - 1px);
+   margin-bottom: calc(var(--bottom-mask-height) * -1);
   /* Calculate the height of the top mask */
   --top-mask-height: calc(
     (var(--top-mask-image-height) / var(--top-mask-image-width) * 100) * 1cqw - 2px
