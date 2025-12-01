@@ -62,7 +62,7 @@ export const useWebGLRenderer = (options: UseWebGLRendererOptions) => {
         const rect = container.getBoundingClientRect();
         const widthPx = Math.max(rect.width, 1);
         const heightPx = Math.max(rect.height, 1);
-        const dpr = getDevicePixelRatio();
+        const dpr = 1 //getDevicePixelRatio();
         const width = Math.floor(widthPx * dpr);
         const height = Math.floor(heightPx * dpr);
 

@@ -58,8 +58,9 @@ const output = useTransition(normalized01ElementCenterInViewport, {
 
     <ASection
       orientation="horizontal"
+      :reverse="true"
       mask-bottom
-      mask-classes="bg-primary"
+      mask-classes="bg-primary/16"
       icon="ph:waves"
       title="Waves Generator"
       description="Generate custom SVG waveforms with adjustable parameters for your web designs."

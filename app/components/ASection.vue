@@ -119,7 +119,7 @@ const slots = defineSlots<PageSectionSlots>();
       maskTop || maskBottom ? 'mask-container' : '',
       !maskTop ? 'mask-top-disabled' : '',
       !maskBottom ? 'mask-bottom-disabled' : '',
-      reverse ? 'flex flex-col-reverse' : '',
+      reverse ? 'lg:order-last' : '',
     ]"
     class="relative"
   >
