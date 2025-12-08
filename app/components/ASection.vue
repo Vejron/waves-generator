@@ -119,7 +119,6 @@ const slots = defineSlots<PageSectionSlots>();
       maskTop || maskBottom ? 'mask-container' : '',
       !maskTop ? 'mask-top-disabled' : '',
       !maskBottom ? 'mask-bottom-disabled' : '',
-      reverse ? 'lg:order-last' : '',
     ]"
     class="relative"
   >
@@ -140,12 +139,12 @@ const slots = defineSlots<PageSectionSlots>();
       />
       <div
         :class="[
-          orientation === 'vertical' ? '' : 'lg:grid-cols-2 lg:items-center',
-          reverse ? 'lg:order-last' : ''
+          orientation === 'vertical' ? '' : 'lg:grid-cols-2 lg:items-center'
         ]"
         class="max-w-(--ui-container) mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:grid py-16 sm:py-24 lg:py-32 gap-8 sm:gap-16"
       >
         <div
+          :class="reverse ? 'lg:order-last' : ''"
           v-if="
             !!slots.header ||
             icon ||
@@ -205,7 +204,7 @@ const slots = defineSlots<PageSectionSlots>();
               <h2
                 v-if="title || !!slots.title"
                 :class="orientation === 'vertical' ? 'text-center' : ''"
-                class="text-3xl sm:text-4xl lg:text-5xl text-pretty tracking-tight font-bold text-highlighted"
+                class="font-display neon-text text-3xl sm:text-4xl lg:text-5xl text-pretty tracking-tight font-bold text-highlighted"
               >
                 <slot name="title">
                   {{ title }}
@@ -284,7 +283,7 @@ const slots = defineSlots<PageSectionSlots>();
         />
         <slot v-if="!!slots.default" />
 
-        <div v-else-if="orientation === 'horizontal'" class="hidden lg:block" />
+       
       </div>
 
       <slot name="bottom" />
@@ -297,7 +296,7 @@ const slots = defineSlots<PageSectionSlots>();
 
 .mask-container {
   /* Apply negative margin to the top and bottom if there is a mask add 1 px to avoid any gap artifacts */
-   margin-top: calc(var(--top-mask-height) * -1 - 1px);
+   margin-top: calc(var(--top-mask-height) * -1 - 2px);
    margin-bottom: calc(var(--bottom-mask-height) * -1);
   /* Calculate the height of the top mask */
   --top-mask-height: calc(
@@ -350,7 +349,7 @@ const slots = defineSlots<PageSectionSlots>();
       transparent calc(100% - var(--bottom-mask-height))
     ),
     var(--bottom-mask-image);
-  mask-repeat: no-repeat;
+  mask-repeat: repeat-x, no-repeat, repeat-x;
   mask-position: top, top, bottom;
   mask-size: 100%, 100%, 100%; /* You may need to increase the width to 101% on the svg masks to compensate for strange sizing behavior in Firefox */
 }

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import colors from "tailwindcss/colors";
 
+
+// elon.yttergren Gunnar8989 0721472824
 const appConfig = useAppConfig();
 const colorMode = useColorMode();
 
@@ -39,9 +41,14 @@ const links = [
     to: "/examples",
   },
   {
-    label: "Presentation",
+    label: "Clip-path",
     icon: "i-lucide-presentation",
-    to: "/",
+    to: "/clippy",
+  },
+  {
+    label: "Colors",
+    icon: "i-lucide-droplet",
+    to: "/colors",
   },
 ];
 </script>
