@@ -35,14 +35,15 @@ const data = ref("hej hopp");
     wave
   />
   <ISection
-    class="bg-zinc-900"
+    class="bg-linear-to-b from-default to-muted"
     headline="About Clippy"
     title="Create custom clip-paths for your web designs"
     description="Clippy is a web application that allows you to create custom SVG clip-paths with adjustable parameters. Use the controls to adjust the clip-path shape and copy the SVG path definition for use in your web designs."
-    :background-pattern="{
-      src: 'assets/patterns/signal.svg',
-      size: '200px',
-      parallax: 'down'
+    :image="{
+      src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29kZXJ8ZW58MHx8MHx8fDA%3D&w=1000&q=80',
+      alt: 'Code on a computer screen',
+      width: 800,
+      height: 600
     }"
     wave
   />

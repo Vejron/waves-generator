@@ -52,13 +52,14 @@ const props = defineProps<{
           backgroundImage: `url(${backgroundPattern.src})`,
           backgroundRepeat: 'repeat',
           backgroundSize: backgroundPattern.size || 'contain',
-          
+
           maskImage: 'linear-gradient(transparent, black 50%, transparent)',
         }"
         :class="[
           '-z-1 absolute inset-0 w-full h-full opacity-40',
           backgroundPattern.parallax && 'background-pattern-parallax',
-          backgroundPattern.parallax === 'up' && 'background-pattern-parallax-up',
+          backgroundPattern.parallax === 'up' &&
+            'background-pattern-parallax-up',
         ]"
       />
       <MDCSlot name="top" unwrap="p" />
@@ -79,13 +80,16 @@ const props = defineProps<{
       <MDCSlot name="features" unwrap="p" />
     </template>
     <template #default>
-      <NuxtImg
-        v-if="image"
-        :src="image.src"
-        :alt="image.alt || 'section image'"
-        :width="image.width || 600"
-        :height="image.height || 400"
-      />
+      <div class="w-full flex justify-center image-appearance">
+        <NuxtImg
+          v-if="image"
+          :src="image.src"
+          :alt="image.alt || 'section image'"
+          :width="image.width || 600"
+          :height="image.height || 400"
+        />
+      </div>
+
       <MDCSlot name="default" unwrap="p" />
     </template>
     <template #bottom>
@@ -96,7 +100,20 @@ const props = defineProps<{
 
 <style scoped>
 .top-wave-path {
-  clip-path: shape(from 0.00% 2.7px, smooth to 11.60% 30.0px, smooth to 24.38% 19.2px, smooth to 37.50% 23.0px, smooth to 47.98% 23.4px, smooth to 62.96% 28.9px, smooth to 75.27% 30.0px, smooth to 88.98% 27.3px, smooth to 100.00% 20.2px, line to 100% 100%, line to 0% 100%, close);
+  clip-path: shape(
+    from 0% 2.7px,
+    smooth to 11.6% 30px,
+    smooth to 24.38% 19.2px,
+    smooth to 37.5% 23px,
+    smooth to 47.98% 23.4px,
+    smooth to 62.96% 28.9px,
+    smooth to 75.27% 30px,
+    smooth to 88.98% 27.3px,
+    smooth to 100% 20.2px,
+    line to 100% 100%,
+    line to 0% 100%,
+    close
+  );
   padding-top: 55px;
   margin-top: -55px;
 }
@@ -131,6 +148,24 @@ const props = defineProps<{
     }
     to {
       background-position: 50% var(--pattern-parallax-travel);
+    }
+  }
+
+  .image-appearance {
+    animation: image-appearance 0.6s ease forwards;
+    animation-timeline: view();
+    opacity: 0;
+    transform: perspective(900px) translateY(0) rotateX(-36deg);
+    transform-origin: center top;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+
+  }
+  @keyframes image-appearance {
+    to {
+      opacity: 1;
+      transform: translateY(0) rotateX(0deg);
     }
   }
 }
