@@ -16,6 +16,7 @@ const props = defineProps<{
   backgroundPattern?: {
     src: string;
     size?: number | string;
+    parallax?: "up" | "down";
   };
   descriptionLighten?: boolean;
   forceDark?: boolean;
@@ -51,10 +52,14 @@ const props = defineProps<{
           backgroundImage: `url(${backgroundPattern.src})`,
           backgroundRepeat: 'repeat',
           backgroundSize: backgroundPattern.size || 'contain',
-          backgroundAttachment: 'fixed',
+          
           maskImage: 'linear-gradient(transparent, black 50%, transparent)',
         }"
-        class="-z-1 absolute inset-0 w-full h-full opacity-40"
+        :class="[
+          '-z-1 absolute inset-0 w-full h-full opacity-40',
+          backgroundPattern.parallax && 'background-pattern-parallax',
+          backgroundPattern.parallax === 'up' && 'background-pattern-parallax-up',
+        ]"
       />
       <MDCSlot name="top" unwrap="p" />
     </template>
@@ -96,61 +101,37 @@ const props = defineProps<{
   margin-top: -55px;
 }
 
-.top-wave-path-inverted {
-  clip-path: shape(
-    from 0% 100%,
-    line to 0% 92.9px,
-    smooth to 17.08% 62.7px,
-    smooth to 42.6% 50px,
-    smooth to 58.79% 90.5px,
-    smooth to 82.7% 60px,
-    smooth to 100% 88.1px,
-    line to 100% 100%,
-    close
-  );
-}
-
-.top-wave-path-animated {
-  animation: waveAnimation;
-  animation-timeline: view();
-}
-
-@keyframes waveAnimation {
-  0%,
-  100% {
-    clip-path: shape(
-        from 0% 0,
-      smooth to 20% 0,
-      smooth to 40% 0,
-      smooth to 60% 0,
-      smooth to 80% 0,
-      smooth to 100% 0,
-      line to 100% 100%,
-      line to 0% 100%,
-      close
-      
-    );
-  }
-  50% {
-    clip-path: shape(
-      from 0% 7.1px,
-      smooth to 17.08% 37.3px,
-      smooth to 42.6% 50px,
-      smooth to 58.79% 9.5px,
-      smooth to 82.7% 40px,
-      smooth to 100% 11.9px,
-      line to 100% 100%,
-      line to 0% 100%,
-      close
-    );
-  }
-}
-
 .darken-tint::after {
   content: "";
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.2);
   pointer-events: none;
+}
+
+.background-pattern-parallax {
+  --pattern-parallax-travel: 135%;
+  background-position: 50% 0%;
+}
+
+@supports (animation-timeline: view()) {
+  .background-pattern-parallax {
+    animation: pattern-parallax linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+
+  .background-pattern-parallax-up {
+    animation-direction: reverse;
+  }
+
+  @keyframes pattern-parallax {
+    from {
+      background-position: 50% 0%;
+    }
+    to {
+      background-position: 50% var(--pattern-parallax-travel);
+    }
+  }
 }
 </style>

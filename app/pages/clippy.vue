@@ -29,7 +29,8 @@ const data = ref("hej hopp");
     description="Clippy is a web application that allows you to create custom SVG clip-paths with adjustable parameters. Use the controls to adjust the clip-path shape and copy the SVG path definition for use in your web designs."
     :background-pattern="{
       src: 'assets/patterns/signal.svg',
-      size: '100px',
+      size: '200px',
+      parallax: 'up'
     }"
     wave
   />
@@ -40,7 +41,8 @@ const data = ref("hej hopp");
     description="Clippy is a web application that allows you to create custom SVG clip-paths with adjustable parameters. Use the controls to adjust the clip-path shape and copy the SVG path definition for use in your web designs."
     :background-pattern="{
       src: 'assets/patterns/signal.svg',
-      size: '100px',
+      size: '200px',
+      parallax: 'down'
     }"
     wave
   />
